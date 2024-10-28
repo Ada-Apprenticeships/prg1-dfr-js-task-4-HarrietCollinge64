@@ -119,9 +119,30 @@ function flatten(dataframe) {
 
 function loadCSV(csvFile, ignorerows, ignorecols) {  // string, dataset, dataset
   // returns a list comprising of [dataframe, rows (integer), cols (integer)]
+  const data = fs.readFileSync(csvFile, "utf-8")
+  const rows = data.split(/\n/)
+  let allowedRows = []
+  let allowedCols = []
+   
+  for (let i = 0; i < rows.length; i++) {
+    if (!ignorerows.includes(i)) {
+      allowedRows.push(rows[i])
+    }
+  }
+  for(const lines in allowedRows){
+    const cols = lines.split(",")
+    for (let i = 0; i < cols.length; i++) {
+      if (!ignorecols.includes(i)) {
+        allowedCols.push(cols[i])
+      }
+    }
+  }
+  return [allowedCols, rows.length, rows[1].split(",").length]
 
 }
-
+ignorerows = [ 0 ];
+ignorecols = [   ];
+console.log(loadCSV ( './assets/testing/datatrafficdataset_10.csv', ignorerows , ignorecols ))
 
 function calculateMedian(dataset) {
   // filters dataset to only include valid numbers
